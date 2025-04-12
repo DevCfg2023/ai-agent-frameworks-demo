@@ -20,17 +20,14 @@ if API_HOST == "github":
     client = AsyncOpenAI(api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com")
     model = OpenAIModel("gpt-4o", provider=OpenAIProvider(openai_client=client))
 elif API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     client = AsyncAzureOpenAI(
         api_version=os.environ["AZURE_OPENAI_VERSION"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         azure_ad_token_provider=token_provider,
     )
-    model = OpenAIModel(
-        os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT"],
-        provider=OpenAIProvider(openai_client=client))
+    model = OpenAIModel(os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT"], provider=OpenAIProvider(openai_client=client))
+
 
 class FlightDetails(BaseModel):
     flight_number: str
@@ -84,12 +81,7 @@ class SeatPreference(BaseModel):
 seat_preference_agent = Agent(
     model,
     result_type=SeatPreference | Failed,
-    system_prompt=(
-        "Extract the user's seat preference. "
-        "Seats A and F are window seats. "
-        "Row 1 is the front row and has extra leg room. "
-        "Rows 14, and 20 also have extra leg room. "
-    ),
+    system_prompt=("Extract the user's seat preference. " "Seats A and F are window seats. " "Row 1 is the front row and has extra leg room. " "Rows 14, and 20 also have extra leg room. "),
 )
 
 

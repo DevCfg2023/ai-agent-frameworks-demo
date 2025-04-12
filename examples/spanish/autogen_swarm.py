@@ -16,13 +16,9 @@ API_HOST = os.getenv("API_HOST", "github")
 
 
 if API_HOST == "github":
-    client = OpenAIChatCompletionClient(
-        model="gpt-4o", api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com"
-    )
+    client = OpenAIChatCompletionClient(model="gpt-4o", api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com")
 elif API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     client = AzureOpenAIChatCompletionClient(
         model=os.environ["AZURE_OPENAI_CHAT_MODEL"],
         api_version=os.environ["AZURE_OPENAI_VERSION"],
@@ -70,9 +66,7 @@ async def ejecutar_equipo_stream(tarea: str) -> None:
     while isinstance(ultimo_mensaje, HandoffMessage) and ultimo_mensaje.target == "usuario":
         mensaje_usuario = input("Usuario: ")
 
-        resultado_tarea = await Console(
-            equipo.run_stream(task=HandoffMessage(source="usuario", target=ultimo_mensaje.source, content=mensaje_usuario))
-        )
+        resultado_tarea = await Console(equipo.run_stream(task=HandoffMessage(source="usuario", target=ultimo_mensaje.source, content=mensaje_usuario)))
         ultimo_mensaje = resultado_tarea.messages[-1]
 
 

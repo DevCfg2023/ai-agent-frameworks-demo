@@ -19,9 +19,7 @@ load_dotenv(override=True)
 API_HOST = os.getenv("API_HOST", "github")
 
 if API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     Settings.llm = AzureOpenAI(
         model=os.environ["AZURE_OPENAI_CHAT_MODEL"],
         deployment_name=os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT"],
@@ -47,9 +45,7 @@ else:
         is_chat_model=True,
     )
 
-    Settings.embed_model = OpenAIEmbedding(
-        model="text-embedding-3-small", api_base="https://models.inference.ai.azure.com", api_key=os.environ["GITHUB_TOKEN"]
-    )
+    Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small", api_base="https://models.inference.ai.azure.com", api_key=os.environ["GITHUB_TOKEN"])
 
 # Intenta cargar el índice desde el almacenamiento
 try:
@@ -81,9 +77,7 @@ query_engine_tools = [
     QueryEngineTool.from_defaults(
         query_engine=engine1,
         name="engine1",
-        description=(
-            "Proporciona información sobre el manual del empleado de Contoso - cubriendo roles básicos de trabajo, políticas, seguridad en el lugar de trabajo, RRHH, etc."
-        ),
+        description=("Proporciona información sobre el manual del empleado de Contoso - cubriendo roles básicos de trabajo, políticas, seguridad en el lugar de trabajo, RRHH, etc."),
     ),
     QueryEngineTool.from_defaults(
         query_engine=engine2,

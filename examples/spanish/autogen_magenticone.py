@@ -15,14 +15,9 @@ API_HOST = os.getenv("API_HOST", "github")
 
 
 if API_HOST == "github":
-    client = OpenAIChatCompletionClient(
-        model="gpt-4o", api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com"
-    )
+    client = OpenAIChatCompletionClient(model="gpt-4o", api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com")
 elif API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(
-        ), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     client = AzureOpenAIChatCompletionClient(
         model=os.environ["AZURE_OPENAI_CHAT_MODEL"],
         api_version=os.environ["AZURE_OPENAI_VERSION"],
@@ -58,6 +53,7 @@ agente_resumen_viaje = AssistantAgent(
     description="Un asistente útil que puede resumir el plan de viaje.",
     system_message="Eres un asistente útil que puede tomar todas las sugerencias y consejos de los otros agentes y proporcionar un plan de viaje final detallado. Debes asegurarte de que el plan final esté integrado y completo. TU RESPUESTA FINAL DEBE SER EL PLAN COMPLETO. Cuando el plan esté completo y todas las perspectivas estén integradas, puedes responder con TERMINATE.",
 )
+
 
 async def ejecutar_agentes():
     terminacion = TextMentionTermination("TERMINATE")

@@ -10,9 +10,7 @@ from pydantic import BaseModel
 logging.basicConfig(level=logging.WARNING)
 load_dotenv(override=True)
 
-token_provider = get_bearer_token_provider(
-    AzureDeveloperCliCredential(tenant_id=os.getenv("AZURE_TENANT_ID")), "https://cognitiveservices.azure.com/.default"
-)
+token_provider = get_bearer_token_provider(AzureDeveloperCliCredential(tenant_id=os.getenv("AZURE_TENANT_ID")), "https://cognitiveservices.azure.com/.default")
 
 client = AzureOpenAI(
     azure_endpoint=f"https://{os.getenv('AZURE_OPENAI_SERVICE')}.openai.azure.com",

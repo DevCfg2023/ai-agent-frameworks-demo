@@ -20,17 +20,14 @@ if API_HOST == "github":
     client = AsyncOpenAI(api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com")
     model = OpenAIModel("gpt-4o", provider=OpenAIProvider(openai_client=client))
 elif API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     client = AsyncAzureOpenAI(
         api_version=os.environ["AZURE_OPENAI_VERSION"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         azure_ad_token_provider=token_provider,
     )
-    model = OpenAIModel(
-        os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT"],
-        provider=OpenAIProvider(openai_client=client))
+    model = OpenAIModel(os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT"], provider=OpenAIProvider(openai_client=client))
+
 
 class FlightDetails(BaseModel):
     flight_number: str
@@ -84,12 +81,7 @@ class SeatPreference(BaseModel):
 seat_preference_agent = Agent(
     model,
     result_type=SeatPreference | Failed,
-    system_prompt=(
-        "Extrae la preferencia de asiento del usuario. "
-        "Los asientos A y F son asientos de ventana. "
-        "La fila 1 es la primera fila y tiene espacio adicional para las piernas. "
-        "Las filas 14 y 20 también tienen espacio adicional para las piernas. "
-    ),
+    system_prompt=("Extrae la preferencia de asiento del usuario. " "Los asientos A y F son asientos de ventana. " "La fila 1 es la primera fila y tiene espacio adicional para las piernas. " "Las filas 14 y 20 también tienen espacio adicional para las piernas. "),
 )
 
 
@@ -127,4 +119,3 @@ if __name__ == "__main__":
     import asyncio
 
     asyncio.run(main())
-    

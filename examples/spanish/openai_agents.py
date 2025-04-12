@@ -17,9 +17,7 @@ if API_HOST == "github":
     client = openai.AsyncOpenAI(base_url="https://models.inference.ai.azure.com", api_key=os.environ["GITHUB_TOKEN"])
     MODEL_NAME = "gpt-4o"
 elif API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     client = openai.AsyncAzureOpenAI(
         api_version=os.environ["AZURE_OPENAI_VERSION"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
@@ -46,14 +44,14 @@ agente_clima = Agent(
 agente_espanol = Agent(
     name="Agente Español",
     instructions="Solo hablas español.",
-    tools=[get_weather],
+    tools=[obtener_clima],
     model=OpenAIChatCompletionsModel(model=MODEL_NAME, openai_client=client),
 )
 
 agente_ingles = Agent(
     name="Agente Inglés",
     instructions="Solo hablas inglés",
-    tools=[get_weather],
+    tools=[obtener_clima],
     model=OpenAIChatCompletionsModel(model=MODEL_NAME, openai_client=client),
 )
 
@@ -72,4 +70,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    
