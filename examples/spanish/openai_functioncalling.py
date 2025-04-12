@@ -4,7 +4,7 @@ import azure.identity
 import openai
 from dotenv import load_dotenv
 
-# Setup the OpenAI client to use either Azure OpenAI or GitHub Models
+# Configura el cliente para usar Azure OpenAI o GitHub Models
 load_dotenv(override=True)
 API_HOST = os.getenv("API_HOST", "github")
 
@@ -25,17 +25,17 @@ tools = [
         "type": "function",
         "function": {
             "name": "lookup_weather",
-            "description": "Lookup the weather for a given city name or zip code.",
+            "description": "Busca el clima para un nombre de ciudad o código postal dado.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "city_name": {
                         "type": "string",
-                        "description": "The city name",
+                        "description": "El nombre de la ciudad",
                     },
                     "zip_code": {
                         "type": "string",
-                        "description": "The zip code",
+                        "description": "El código postal",
                     },
                 },
                 "additionalProperties": False,
@@ -46,17 +46,17 @@ tools = [
         "type": "function",
         "function": {
             "name": "lookup_movies",
-            "description": "Lookup movies playing in a given city name or zip code.",
+            "description": "Busca películas en cartelera en un nombre de ciudad o código postal dado.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "city_name": {
                         "type": "string",
-                        "description": "The city name",
+                        "description": "El nombre de la ciudad",
                     },
                     "zip_code": {
                         "type": "string",
-                        "description": "The zip code",
+                        "description": "El código postal",
                     },
                 },
                 "additionalProperties": False,
@@ -68,14 +68,14 @@ tools = [
 response = client.chat.completions.create(
     model=MODEL_NAME,
     messages=[
-        {"role": "system", "content": "You are a tourism chatbot."},
-        {"role": "user", "content": "is it rainy enough in sydney to watch movies and which ones are on?"},
+        {"role": "system", "content": "Eres un chatbot de turismo."},
+        {"role": "user", "content": "¿está lloviendo lo suficiente en Sydney como para ver películas y cuáles están en cartelera?"},
     ],
     tools=tools,
     tool_choice="auto",
 )
 
-print(f"Response from {MODEL_NAME} on {API_HOST}: \n")
+print(f"Respuesta de {MODEL_NAME} en {API_HOST}: \n")
 for message in response.choices[0].message.tool_calls:
     print(message.function.name)
     print(message.function.arguments)

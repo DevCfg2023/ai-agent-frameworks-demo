@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # Disable tracing since we're not using OpenAI.com models
 set_tracing_disabled(disabled=True)
 
-# Setup the OpenAI client to use either Azure OpenAI or GitHub Models
+# Configura el cliente para usar Azure OpenAI o GitHub Models
 load_dotenv(override=True)
 API_HOST = os.getenv("API_HOST", "github")
 
@@ -27,45 +27,44 @@ elif API_HOST == "azure":
 
 
 @function_tool
-def get_weather(city: str) -> str:
+def obtener_clima(ciudad: str) -> str:
     return {
-        "city": city,
-        "temperature": 72,
-        "description": "Sunny",
+        "ciudad": ciudad,
+        "temperatura": 72,
+        "descripcion": "Soleado",
     }
 
 
-agent = Agent(
-    name="Weather agent",
-    instructions="You can only provide weather information.",
-    tools=[get_weather],
+agente_clima = Agent(
+    name="Agente del Clima",
+    instructions="Solo puedes proporcionar información del clima.",
+    tools=[obtener_clima],
 )
 
-
-spanish_agent = Agent(
-    name="Spanish agent",
-    instructions="You only speak Spanish.",
-    tools=[get_weather],
+agente_espanol = Agent(
+    name="Agente Español",
+    instructions="Solo hablas español.",
+    tools=[obtener_clima],
     model=OpenAIChatCompletionsModel(model=MODEL_NAME, openai_client=client),
 )
 
-english_agent = Agent(
-    name="English agent",
-    instructions="You only speak English",
-    tools=[get_weather],
+agente_ingles = Agent(
+    name="Agente Inglés",
+    instructions="Solo hablas inglés",
+    tools=[obtener_clima],
     model=OpenAIChatCompletionsModel(model=MODEL_NAME, openai_client=client),
 )
 
-triage_agent = Agent(
-    name="Triage agent",
-    instructions="Handoff to the appropriate agent based on the language of the request.",
-    handoffs=[spanish_agent, english_agent],
+agente_triaje = Agent(
+    name="Agente de Triaje",
+    instructions="Transfiere al agente apropiado según el idioma de la solicitud.",
+    handoffs=[agente_espanol, agente_ingles],
     model=OpenAIChatCompletionsModel(model=MODEL_NAME, openai_client=client),
 )
 
 
 async def main():
-    result = await Runner.run(triage_agent, input="Hola, ¿cómo estás? ¿Puedes darme el clima para San Francisco CA?")
+    result = await Runner.run(agente_triaje, input="Hola, ¿cómo estás? ¿Puedes darme el clima para San Francisco CA?")
     print(result.final_output)
 
 

@@ -14,7 +14,7 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.llms.openai_like import OpenAILike
 
-# Setup the client to use either Azure OpenAI or GitHub Models
+# Configura el cliente para usar Azure OpenAI o GitHub Models
 load_dotenv(override=True)
 API_HOST = os.getenv("API_HOST", "github")
 
@@ -47,7 +47,7 @@ else:
 
     Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small", api_base="https://models.inference.ai.azure.com", api_key=os.environ["GITHUB_TOKEN"])
 
-# Try to load the index from storage
+# Intenta cargar el índice desde el almacenamiento
 try:
     storage_context = StorageContext.from_defaults(persist_dir="./storage/docs1")
     index1 = load_index_from_storage(storage_context)
@@ -77,12 +77,12 @@ query_engine_tools = [
     QueryEngineTool.from_defaults(
         query_engine=engine1,
         name="engine1",
-        description=("Provides information about Contoso employee handbook - covering basic job roles, policies, workplace safety, HR, etc."),
+        description=("Proporciona información sobre el manual del empleado de Contoso - cubriendo roles básicos de trabajo, políticas, seguridad en el lugar de trabajo, RRHH, etc."),
     ),
     QueryEngineTool.from_defaults(
         query_engine=engine2,
         name="engine2",
-        description=("Provides information about Contoso PerksPlus program, including what can be reimbursed. "),
+        description=("Proporciona información sobre el programa PerksPlus de Contoso, incluyendo lo que puede ser reembolsado."),
     ),
 ]
 
@@ -91,7 +91,7 @@ async def main():
     agent = ReActAgent(tools=query_engine_tools, llm=Settings.llm)
     ctx = Context(agent)
 
-    handler = agent.run("can i get my gardening tools reimbursed?", ctx=ctx)
+    handler = agent.run("¿puedo obtener un reembolso para mis herramientas de jardinería?", ctx=ctx)
 
     async for ev in handler.stream_events():
         if isinstance(ev, AgentStream):

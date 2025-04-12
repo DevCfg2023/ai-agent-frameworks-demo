@@ -4,7 +4,7 @@ import azure.identity
 from dotenv import load_dotenv
 from smolagents import AzureOpenAIServerModel, CodeAgent, DuckDuckGoSearchTool, OpenAIServerModel
 
-# Setup the OpenAI client to use either Azure OpenAI or GitHub Models
+# Configura el cliente para usar Azure OpenAI o GitHub Models
 load_dotenv(override=True)
 API_HOST = os.getenv("API_HOST", "github")
 
@@ -17,4 +17,4 @@ elif API_HOST == "azure":
 
 agent = CodeAgent(tools=[DuckDuckGoSearchTool()], model=model)
 
-agent.run("How many seconds would it take for a leopard at full speed to run through Pont des Arts?")
+agent.run("¿Cuántos segundos le tomaría a un leopardo corriendo a máxima velocidad en atravesar el Pont des Arts?")
